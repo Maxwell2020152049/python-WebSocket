@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket Example</title>
+    </head>
+    <body>
+        <button id="connectButton1">建立连接1</button>
+        <!-- <button id="connectButton2">建立连接2</button> -->
+
+        <textarea id="partialMessage1"></textarea>
+        <textarea id="partialMessage2"></textarea>
+
+        <style>
+            textarea {
+                width: 100%;
+                height: 300px; /* 调整文本框的高度 */
+                overflow-y: scroll; /* 设置垂直滚动条 */
+            }
+        </style>
+
+        <script>
+            // 获取按钮元素
+            var connectButton1 = document.getElementById('connectButton1');
+            // var connectButton2 = document.getElementById('connectButton2');
+
+            // 当按钮被点击时执行函数var connectButton = document.getElementById('connectButton');
+            connectButton1.addEventListener('click', function() {
+                const socket = new WebSocket('ws://localhost:9002/connect1');
+
+                socket.onmessage = function(event) {
+                    const partial_message = event.data;
+                    document.getElementById('partialMessage1').value += partial_message
+                    partialMessage1.scrollTop = partialMessage1.scrollHeight;
+                }
+
+                const socket2 = new WebSocket('ws://localhost:9002/connect2');
+
+                socket2.onmessage = function(event) {
+                    const partial_message = event.data;
+                    document.getElementById('partialMessage2').value += partial_message
+                    partialMessage2.scrollTop = partialMessage2.scrollHeight;
+                }
+            });
+            // 当按钮被点击时执行函数var connectButton = document.getElementById('connectButton');
+            // connectButton2.addEventListener('click', function() {
+            //     const socket = new WebSocket('ws://localhost:9002/connect2');
+
+            //     socket.onmessage = function(event) {
+            //         const partial_message = event.data;
+            //         document.getElementById('partialMessage2').value += partial_message
+            //         partialMessage2.scrollTop = partialMessage2.scrollHeight;
+            //     }
+            // });
+        </script>
+        </script>
+    </body>
+</html>
