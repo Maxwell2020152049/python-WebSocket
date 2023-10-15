@@ -1,2 +1,3 @@
-**/.vsode
+**/.vscode
 cigarette.py
+__pycache__

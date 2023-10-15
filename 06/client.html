@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebSocket Example</title>
+    </head>
+    <body>
+        <textarea id="partialMessage1"></textarea>
+        <textarea id="partialMessage2"></textarea>
+
+        <style>
+            textarea {
+                width: 100%;
+                height: 300px; /* 调整文本框的高度 */
+                overflow-y: scroll; /* 设置垂直滚动条 */
+            }
+        </style>
+
+        <script>
+            const socket = new WebSocket('ws://localhost:9002/connect1');
+
+            socket.onmessage = function(event) {
+                const partial_message = event.data;
+                document.getElementById('partialMessage1').value += partial_message
+                document.getElementById('partialMessage2').value += partial_message
+                partialMessage1.scrollTop = partialMessage1.scrollHeight;
+                partialMessage2.scrollTop = partialMessage2.scrollHeight;
+            }
+        </script>
+    </body>
+</html>

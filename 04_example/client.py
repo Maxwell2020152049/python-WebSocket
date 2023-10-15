@@ -7,7 +7,7 @@ from user import User
 
 
 async def hello_world():
-    uri = "ws://localhost:7890"
+    uri = "ws://localhost:9002"
     async with websockets.connect(uri) as websocket:
         while True:
             # 输入想问候的名字

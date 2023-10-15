@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+</head>
+
+<body>
+    <h2>WebSocket Heartbeat Client</h2>
+
+    <button onclick="startWebSocket()">Start WebSocket</button>
+    <br><br>
+
+    <!-- Input for sending messages -->
+    <input type="text" id="inputMessage" placeholder="Enter your message here">
+    <button onclick="sendMessage()">Send</button>
+    <br><br>
+
+    <!-- TextArea for displaying received messages -->
+    <textarea id="receivedMessages" rows="10" cols="30" readonly></textarea>
+
+    <script>
+        let ws;
+
+        function startWebSocket() {
+            // ws = new WebSocket('ws://192.168.100.245:9002'); // Adjust the IP and PORT accordingly
+            ws = new WebSocket('ws://localhost:9002');
+
+            ws.onopen = function(event) {
+                console.log('WebSocket connected:', event);
+
+                // Send heartbeat every 3 seconds
+                setInterval(() => {
+                    if (ws.readyState === WebSocket.OPEN) {
+                        sendHeartbeat();
+                    }
+                }, 3000);
+            };
+
+            ws.onmessage = function(event) {
+                console.log('Received:', event.data);
+                const receivedMessage = JSON.parse(event.data);
+                if (receivedMessage.type === 'data') {
+                    document.getElementById('receivedMessages').value += receivedMessage.data + '\n';
+                }
+            };
+
+            ws.onclose = function(event) {
+                if (event.wasClean) {
+                    console.log('Connection closed cleanly');
+                } else {
+                    console.log('Connection died');
+                }
+                console.log('Code:', event.code, 'reason:', event.reason);
+            };
+
+            ws.onerror = function(error) {
+                console.log('Error:', error);
+            };
+        }
+
+        function sendHeartbeat() {
+            const heartbeatData = {
+                type: 'heart'
+            };
+            ws.send(JSON.stringify(heartbeatData));
+            console.log('Sent heartbeat');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('inputMessage');
+            const messageData = {
+                type: 'data',
+                data: input.value
+            };
+            ws.send(JSON.stringify(messageData));
+            console.log('Sent message:', input.value);
+            input.value = ''; // Clear the input
+        }
+
+    </script>
+</body>
+
+</html>
